@@ -128,9 +128,22 @@ def resample_nib(image, new_size=None, new_size_type=None, image_dest=None, inte
     if img.ndim == 3:
         # we use mode 'nearest' to overcome issue #2453
         print("3d")
+        from pprint import pprint
+        #breakpoint()
+        print(img.affine)
+        print(img.shape)
+        for k,v in img.header.items():
+            pprint(k)
+            pprint(v)
+            print()
+        print(img.dataobj.dtype)
+        for v in img.dataobj.reshape((-1,)):
+            print("\t",v)
+        print(reference)
+        print(dict_interp[interpolation])
+        print(mode)
         img_r = resample_from_to(
             img, to_vox_map=reference, order=dict_interp[interpolation], mode=mode, cval=0.0, out_class=None)
-        from pprint import pprint
         pprint(list(img_r.get_data().reshape((-1,))))
 
     elif img.ndim == 4:
