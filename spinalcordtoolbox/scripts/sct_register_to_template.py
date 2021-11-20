@@ -417,6 +417,8 @@ def main(argv=None):
     curdir = os.getcwd()
     os.chdir(path_tmp)
 
+    os.system('find -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done; ls | sort | xargs sha256sum')
+
     # Generate labels from template vertebral labeling
     if label_type == 'body':
         printv('\nGenerate labels from template vertebral labeling', verbose)
@@ -452,6 +454,8 @@ def main(argv=None):
     out.data = binarize(out.data, 0.5)
     out.save(path=ftmp_seg)
 
+    os.system('find -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done; ls | sort | xargs sha256sum')
+
     # Switch between modes: subject->template or template->subject
     if ref == 'template':
 
@@ -480,6 +484,8 @@ def main(argv=None):
         img_tmp_label = Image(ftmp_label).change_orientation("RPI")
         ftmp_label = add_suffix(img_tmp_label.absolutepath, "_rpi")
         img_tmp_label.save(ftmp_label, mutable=True)
+
+        os.system('find -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done; ls | sort | xargs sha256sum')
 
 
         ftmp_seg_, ftmp_seg = ftmp_seg, add_suffix(ftmp_seg, '_crop')
@@ -543,6 +549,7 @@ def main(argv=None):
                 '-d', 'straight_ref.nii.gz',
                 '-o', add_suffix(ftmp_seg, '_straight')])
         else:
+            os.system('find -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done; ls | sort | xargs sha256sum')
             from spinalcordtoolbox.straightening import SpinalCordStraightener
             sc_straight = SpinalCordStraightener(ftmp_seg, ftmp_seg)
             sc_straight.param_centerline = param_centerline
