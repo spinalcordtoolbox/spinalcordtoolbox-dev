@@ -36,5 +36,5 @@ reference = (shape_r, affine_r)
 
 img_r = resample_from_to(img, to_vox_map=reference, order=1, mode='nearest', cval=0.0, out_class=None)
 
-#from pprint import pprint
-#pprint(list(img_r.get_data().reshape((-1,)))[:1000])
+from pprint import pprint
+pprint(list(img_r.get_data().reshape((-1,)))[:1000])
