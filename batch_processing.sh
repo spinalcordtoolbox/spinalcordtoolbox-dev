@@ -66,16 +66,18 @@ cd sct_example_data
 cd t2
 
 (cd ..
-  find t2/ -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done
-  find -type f ! -name 'trace*.txt' -printf "%T+\t" -exec sha256sum {} \; | sort | awk '{print NR "\t" $2 "\t" $3}' | tee trace0.txt
+  find t2/ -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done # normalize .gz timestamps to 0
+  mkdir -p ../run-"$start"
+  find -type f ! -name 'trace*.txt' -printf "%T+\t" -exec sha256sum {} \; | sort | awk '{print NR "\t" $2 "\t" $3}' | tee ../run-"$start"/trace0.txt
 )
 
 # Segment spinal cord
 sct_deepseg_sc -i t2.nii.gz -c t2 -qc "$SCT_BP_QC_FOLDER"
 
 (cd ..
-  find t2/ -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done
-  find -type f ! -name 'trace*.txt' -printf "%T+\t" -exec sha256sum {} \; | sort | awk '{print NR "\t" $2 "\t" $3}' | tee trace1.txt
+  find t2/ -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done # normalize .gz timestamps to 0
+  mkdir -p ../run-"$start"
+  find -type f ! -name 'trace*.txt' -printf "%T+\t" -exec sha256sum {} \; | sort | awk '{print NR "\t" $2 "\t" $3}' | tee ../run-"$start"/trace1.txt
 )
 
 # Tips: If you are not satisfied with the results you can try with another algorithm:
@@ -85,16 +87,18 @@ sct_deepseg_sc -i t2.nii.gz -c t2 -qc "$SCT_BP_QC_FOLDER"
 sct_label_vertebrae -i t2.nii.gz -s t2_seg.nii.gz -c t2 -qc "$SCT_BP_QC_FOLDER"
 
 (cd ..
-  find t2/ -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done
-  find -type f ! -name 'trace*.txt' -printf "%T+\t" -exec sha256sum {} \; | sort | awk '{print NR "\t" $2 "\t" $3}' | tee trace2.txt
+  find t2/ -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done # normalize .gz timestamps to 0
+  mkdir -p ../run-"$start"
+  find -type f ! -name 'trace*.txt' -printf "%T+\t" -exec sha256sum {} \; | sort | awk '{print NR "\t" $2 "\t" $3}' | tee ../run-"$start"/trace2.txt
 )
 
 # Create labels at in the cord at C2 and C5 mid-vertebral levels
 sct_label_utils -i t2_seg_labeled.nii.gz -vert-body 2,5 -o labels_vert.nii.gz
 
 (cd ..
-  find t2/ -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done
-  find -type f ! -name 'trace*.txt' -printf "%T+\t" -exec sha256sum {} \; | sort | awk '{print NR "\t" $2 "\t" $3}' | tee trace3.txt
+  find t2/ -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done # normalize .gz timestamps to 0
+  mkdir -p ../run-"$start"
+  find -type f ! -name 'trace*.txt' -printf "%T+\t" -exec sha256sum {} \; | sort | awk '{print NR "\t" $2 "\t" $3}' | tee ../run-"$start"/trace3.txt
 )
 
 # Tips: you can also create labels manually using:
@@ -103,8 +107,9 @@ sct_label_utils -i t2_seg_labeled.nii.gz -vert-body 2,5 -o labels_vert.nii.gz
 sct_register_to_template -i t2.nii.gz -s t2_seg.nii.gz -l labels_vert.nii.gz -c t2 -qc "$SCT_BP_QC_FOLDER"
 
 (cd ..
-  find t2/ -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done
-  find -type f ! -name trace.txt -printf "%T+\t" -exec sha256sum {} \; | sort | awk '{print NR "\t" $2 "\t" $3}' | tee trace4.txt
+  find t2/ -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done # normalize .gz timestamps to 0
+  mkdir -p ../run-"$start"
+  find -type f ! -name trace.txt -printf "%T+\t" -exec sha256sum {} \; | sort | awk '{print NR "\t" $2 "\t" $3}' | tee ../run-"$start"/trace4.txt
 )
 
 exit 0
