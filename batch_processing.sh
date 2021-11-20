@@ -69,7 +69,7 @@ cd t2
   find t2/ -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done # normalize .gz timestamps to 0
   mkdir -p ../run-"$start"
   # run this with
-  # script -c 'time ./batch_processing.sh' batch_processing.log
+  # rm -f batch_processing.log && script -c 'time ./batch_processing.sh' batch_processing.log
   # to capture full output
   if test -f "../batch_processing.log"; then ln ../batch_processing.log ../run-"$start"/batch_processing.log; fi
   find -type f ! -name 'trace*.txt' -printf "%T+\t" -exec sha256sum {} \; | sort | awk '{print NR "\t" $2 "\t" $3}' | tee ../run-"$start"/trace0.txt
