@@ -112,7 +112,9 @@ def resample_nib(image, new_size=None, new_size_type=None, image_dest=None, inte
 
         print("R:", R)
         affine_r = np.dot(affine, R)
-        print("affine_r:", affine_r)
+        #print("affine_r:", affine_r)
+        np.save('affine.npy', affine_r)
+        import os; os.system('sha256sum affine.npy')
         reference = (shape_r, affine_r)
 
     # If reference is provided
@@ -137,14 +139,14 @@ def resample_nib(image, new_size=None, new_size_type=None, image_dest=None, inte
             pprint(v)
             print()
         print(img.dataobj.dtype)
-        for v in img.dataobj.reshape((-1,)):
-            print("\t",v)
+        #for v in img.dataobj.reshape((-1,)):
+        #    print("\t",v)
         print(reference)
         print(dict_interp[interpolation])
         print(mode)
         img_r = resample_from_to(
             img, to_vox_map=reference, order=dict_interp[interpolation], mode=mode, cval=0.0, out_class=None)
-        pprint(list(img_r.get_data().reshape((-1,))))
+        pprint(list(img_r.get_data().reshape((-1,)))[:1000])
 
     elif img.ndim == 4:
         print("4d (again)")
