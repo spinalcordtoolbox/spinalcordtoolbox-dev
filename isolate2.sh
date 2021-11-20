@@ -5,7 +5,7 @@
 
 if [ -z "$1" ]; then
   #
-  for i in `seq 3`; do
+  for i in `seq 1`; do
     mkdir -p sink-$i
     ( cd sink-$i 
     # recurse into ourselves, so we can have script(1) record the output
