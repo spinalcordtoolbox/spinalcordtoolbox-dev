@@ -566,6 +566,7 @@ def main(argv=None):
                 sc_straight.discs_ref_filename = ftmp_template_label
 
             sc_straight.straighten()
+            raise SystemExit(1)
             cache_save(cachefile, cache_sig)
 
         # N.B. DO NOT UPDATE VARIABLE ftmp_seg BECAUSE TEMPORARY USED LATER
