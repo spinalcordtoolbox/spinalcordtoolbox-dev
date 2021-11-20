@@ -19,17 +19,6 @@ for i in range(3):
     R[i, i] = img.shape[i] / float(shape_r[i])
 affine_r = np.dot(affine, R)
 
-
-_affine_r = array([[ 1.00357811e+00,  1.28000002e-13, -2.61769351e-02,
-        -1.94520493e+01],
-       [ 1.80669852e-16,  1.00000001e+00,  4.89700023e-12,
-        -1.15151794e+02],
-       [ 2.62796037e-02, -4.89500042e-12,  9.99657363e-01,
-        -1.22996811e+02],
-       [ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,
-         1.00000000e+00]])
-
-
 np.save('affine.npy', affine_r)
 os.system('sha256sum affine.npy')
 reference = (shape_r, affine_r)
