@@ -130,6 +130,8 @@ def resample_nib(image, new_size=None, new_size_type=None, image_dest=None, inte
         print("3d")
         img_r = resample_from_to(
             img, to_vox_map=reference, order=dict_interp[interpolation], mode=mode, cval=0.0, out_class=None)
+        from pprint import pprint
+        pprint(list(img_r.get_data().reshape((-1,))))
 
     elif img.ndim == 4:
         print("4d (again)")
