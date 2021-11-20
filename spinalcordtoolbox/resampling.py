@@ -56,34 +56,46 @@ def resample_nib(image, new_size=None, new_size_type=None, image_dest=None, inte
         # Get dimensions of data
         p = img.header.get_zooms()
         shape = img.header.get_data_shape()
+        print("p:", p)
+        print("shape:", shape)
 
         # determine the number of dimensions that should be resampled
         ndim_r = img.ndim
         if img.ndim == 4:
+            print("4d")
             # For 4D images, only resample (x, y, z) dim, and preserve 't' dim
             ndim_r = 3
+        print("ndim_r:", ndim_r)
 
         # compute new shape based on specific resampling method
         if new_size_type == 'vox':
+            print('vox')
             shape_r = tuple([int(new_size[i]) for i in range(ndim_r)])
+            print("shape_r:", shape_r)
         elif new_size_type == 'factor':
+            print('factor')
             if len(new_size) == 1:
                 # isotropic resampling
                 new_size = tuple([new_size[0] for i in range(ndim_r)])
             # compute new shape as: shape_r = shape * f
             shape_r = tuple([int(np.round(shape[i] * float(new_size[i]))) for i in range(ndim_r)])
+            print("shape_r:", shape_r)
         elif new_size_type == 'mm':
+            print('mm')
             if len(new_size) == 1:
                 # isotropic resampling
                 new_size = tuple([new_size[0] for i in range(ndim_r)])
             # compute new shape as: shape_r = shape * (p_r / p)
             shape_r = tuple([int(np.round(shape[i] * float(p[i]) / float(new_size[i]))) for i in range(ndim_r)])
+            print("shape_r:", shape_r)
         else:
             raise ValueError("'new_size_type' is not recognized.")
 
         if img.ndim == 4:
             # Copy over 't' dim (i.e. number of volumes should be unaffected)
+            print("4d hack")
             shape_r = shape_r + (shape[3],)
+            print("shape_r:", shape_r)
 
         # Generate 3d affine transformation: R
         affine = img.affine[:4, :4]
@@ -98,11 +110,14 @@ def resample_nib(image, new_size=None, new_size_type=None, image_dest=None, inte
                                         "unrealistic dimension. Check your NIFTI pixdim values to make sure they are "
                                         "not corrupted.".format(i))
 
+        print("R:", R)
         affine_r = np.dot(affine, R)
+        print("affine_r:", affine_r)
         reference = (shape_r, affine_r)
 
     # If reference is provided
     else:
+        print("reference provided")
         if type(image_dest) == nib.nifti1.Nifti1Image:
             reference = image_dest
         elif type(image_dest) == Image:
@@ -112,10 +127,12 @@ def resample_nib(image, new_size=None, new_size_type=None, image_dest=None, inte
 
     if img.ndim == 3:
         # we use mode 'nearest' to overcome issue #2453
+        print("3d")
         img_r = resample_from_to(
             img, to_vox_map=reference, order=dict_interp[interpolation], mode=mode, cval=0.0, out_class=None)
 
     elif img.ndim == 4:
+        print("4d (again)")
         # TODO: Cover img_dest with 4D volumes
         # Import here instead of top of the file because this is an isolated case and nibabel takes time to import
         data4d = np.zeros(shape_r)
