@@ -463,6 +463,9 @@ def main(argv=None):
         printv('\nResample data to 1mm isotropic...', verbose)
         resample_file(ftmp_data, add_suffix(ftmp_data, '_1mm'), '1.0x1.0x1.0', 'mm', 'linear', verbose)
         ftmp_data = add_suffix(ftmp_data, '_1mm')
+        os.system('find -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done; ls | sort | xargs sha256sum')
+        raise SystemExit(1)
+
         resample_file(ftmp_seg, add_suffix(ftmp_seg, '_1mm'), '1.0x1.0x1.0', 'mm', 'linear', verbose)
         ftmp_seg = add_suffix(ftmp_seg, '_1mm')
         # N.B. resampling of labels is more complicated, because they are single-point labels, therefore resampling
@@ -485,7 +488,6 @@ def main(argv=None):
         ftmp_label = add_suffix(img_tmp_label.absolutepath, "_rpi")
         img_tmp_label.save(ftmp_label, mutable=True)
 
-        os.system('find -type f -name "*.gz" | while read nifti; do gunzip "$nifti" && gzip -1n "${nifti%%.gz}"; done; ls | sort | xargs sha256sum')
 
 
         ftmp_seg_, ftmp_seg = ftmp_seg, add_suffix(ftmp_seg, '_crop')
