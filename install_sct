@@ -579,8 +579,10 @@ fi
 
 
 # Remove old python folder
-run rm -rf "$SCT_DIR/$PYTHON_DIR"
+#run rm -rf "$SCT_DIR/$PYTHON_DIR"
 run mkdir -p "$SCT_DIR/$PYTHON_DIR"
+
+if ! test -x "$SCT_DIR/$PYTHON_DIR"/bin/conda; then
 
 # Download miniconda
 print info "Downloading Miniconda..."
@@ -601,6 +603,8 @@ run bash "$TMP_DIR/miniconda.sh" -p "$SCT_DIR/$PYTHON_DIR" -b -f
 # See: https://github.com/conda/conda/issues/9948#issuecomment-909989810
 # Syntax explanation: https://stackoverflow.com/a/6085237
 find "$SCT_DIR/$PYTHON_DIR" -type f -exec touch {} +
+
+fi
 
 # create conda environment
 print info "Creating conda environment..."
