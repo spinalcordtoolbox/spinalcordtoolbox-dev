@@ -28,6 +28,7 @@ jobs:
         run: |
           uname -a
           set
+          lscpu
 
       - name: Install
         run: |
