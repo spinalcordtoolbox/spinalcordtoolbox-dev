@@ -20,7 +20,7 @@ pytest-cov
 raven
 requests
 requirements-parser
-scipy
+scipy==1.5.4
 scikit-image
 scikit-learn
 tensorflow~=1.15.0
