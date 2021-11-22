@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
 import os
+
+os.system("python --version")
+os.system("pip freeze")
+
 from numpy import array
 import numpy as np
 import nibabel
