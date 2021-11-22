@@ -608,7 +608,7 @@ fi
 
 # create conda environment
 print info "Creating conda environment..."
-python/bin/conda create -y -n venv_sct python=3.7
+python/bin/conda create -y -n venv_sct_36 python=3.6
 
 # Reapply the touch fix to avoid `pip` connection issues on WSL
 find "$SCT_DIR/$PYTHON_DIR" -type f -exec touch {} +
@@ -620,21 +620,21 @@ find "$SCT_DIR/$PYTHON_DIR" -type f -exec touch {} +
 # * https://github.com/spinalcordtoolbox/spinalcordtoolbox/issues/3200
 # this needs to be added very early in python's boot process
 # so using sitecustomize.py or even just appending to the file are impossible.
-sed_i 's/^ENABLE_USER_SITE.*$/ENABLE_USER_SITE = False/' "$SCT_DIR/$PYTHON_DIR/envs/venv_sct/lib/python"*"/site.py"
+sed_i 's/^ENABLE_USER_SITE.*$/ENABLE_USER_SITE = False/' "$SCT_DIR/$PYTHON_DIR/envs/venv_sct_36/lib/python"*"/site.py"
 
 # activate miniconda
 # shellcheck disable=SC1091
 source python/etc/profile.d/conda.sh
 set +u #disable safeties, for conda is not written to their standard.
-conda activate venv_sct
+conda activate venv_sct_36
 set -u # reactivate safeties
 
 # double-check conda activated (it can be glitchy): https://github.com/spinalcordtoolbox/spinalcordtoolbox/issues/3029
 print info "Validating that conda environment can be activated..."
-EXPECTED_PYTHON="$(realpath "$(command -v python/envs/venv_sct/bin/python)")"
+EXPECTED_PYTHON="$(realpath "$(command -v python/envs/venv_sct_36/bin/python)")"
 ACTUAL_PYTHON="$(realpath "$(command -v python)")"
 if [ "$ACTUAL_PYTHON" != "$EXPECTED_PYTHON"  ]; then
-  echo "Error: Activating venv_sct failed to switch Python interpreter to Miniconda. (Incorrect interpreter loaded: $ACTUAL_PYTHON)" >&2
+  echo "Error: Activating venv_sct_36 failed to switch Python interpreter to Miniconda. (Incorrect interpreter loaded: $ACTUAL_PYTHON)" >&2
   exit 1
 fi
 
@@ -681,7 +681,7 @@ fi
 ## Create launchers for Python scripts
 print info "Creating launchers for Python scripts..."
 mkdir -p "$SCT_DIR/$BIN_DIR"
-for file in "$SCT_DIR"/python/envs/venv_sct/bin/*sct*; do
+for file in "$SCT_DIR"/python/envs/venv_sct_36/bin/*sct*; do
   cp "$file" "$SCT_DIR/$BIN_DIR/" || die "Problem creating launchers!"
 done
 

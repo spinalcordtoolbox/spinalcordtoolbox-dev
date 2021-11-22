@@ -41,7 +41,7 @@ setup(
     packages=find_packages(exclude=['.git', 'data', 'dev', 'dev.*',
                                     'install', 'testing']),
     include_package_data=True,
-    python_requires="==3.7.*",
+    python_requires="==3.6.*",
     extras_require={
         'docs': [
             'sphinxcontrib-programoutput',
