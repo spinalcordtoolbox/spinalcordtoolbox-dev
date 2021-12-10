@@ -38,6 +38,10 @@ jobs:
         run: |
           ./rep2.py | tee rep2-test.txt
 
+      - name: Test reproducibility script from numpy issue
+        run: |
+          ./rep_numpy-issue.py
+
       - name: Upload dot product artifact
         uses: actions/upload-artifact@v2
         with:
