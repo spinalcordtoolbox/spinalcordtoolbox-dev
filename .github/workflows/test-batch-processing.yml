@@ -62,7 +62,7 @@ jobs:
 
       - name: Run batch_processing.sh
         run: |
-          ./batch_processing.sh
+          ./batch_processing_mini.sh
 
       - name: Validate new results
         run: |
