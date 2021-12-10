@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import sys, numpy; print(numpy.__version__, sys.version)
+
 import numpy as np
 
 array1 = np.load('array1.npy')
