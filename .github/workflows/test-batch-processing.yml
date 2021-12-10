@@ -38,6 +38,12 @@ jobs:
         run: |
           ./rep2.py | tee rep2-test.txt
 
+      - name: Upload dot product artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dot-product
+          path: ./dot-product-result.npy
+
       - name: Validate new results
         run: |
           diff -u rep2-snapshot.txt rep2-test.txt

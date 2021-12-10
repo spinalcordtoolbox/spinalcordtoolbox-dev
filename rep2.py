@@ -24,3 +24,4 @@ print_("a_to_affine", a_to_affine)
 to_vox2from_vox = to_vox2from_vox_1.dot(a_to_affine)
 print_("to_vox2from_vox", to_vox2from_vox)
 
+np.save('dot-product-result.npy', to_vox2from_vox)
