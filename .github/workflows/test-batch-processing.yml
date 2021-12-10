@@ -33,6 +33,20 @@ jobs:
                               # macOS currently fails due to https://github.com/spinalcordtoolbox/spinalcordtoolbox/issues/3194
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Get CPU model name
+        id: get_cpu_name
+        run: |
+          model_name=$(lscpu | sed -nr '/Model name/ s/.*:\s*(.*) @ .*/\1/p')
+          echo $model_name
+          echo "::set-output name=cpu_name::$model_name"
+
+      - name: Check if ${{ steps.get_cpu_name.outputs.cpu_name }} is Xeon Platinum 8370C
+        if: ${{ steps.get_cpu_name.outputs.cpu_name != 'Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz' }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+            core.setFailed('CPU name is not 8370C')
+
       - name: Checkout SCT
         uses: actions/checkout@v2
 
