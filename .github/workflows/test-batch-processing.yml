@@ -64,8 +64,11 @@ jobs:
         run: |
           ./batch_processing_mini.sh
 
-      - name: Validate new results
-        run: |
-          source python/etc/profile.d/conda.sh
-          conda activate venv_sct
-          pytest testing/batch_processing/test_batch_processing.py
+      - name: Upload dot product artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dot-product
+          path: |
+            ftmp_data_1mm.nii.gz
+            ftmp_seg_1mm.nii.gz
+            ftmp_label_1mm.nii.gz

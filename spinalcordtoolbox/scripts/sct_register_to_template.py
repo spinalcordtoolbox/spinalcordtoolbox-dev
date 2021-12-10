@@ -34,7 +34,7 @@ from spinalcordtoolbox.utils.fs import (copy, extract_fname, check_file_exist, r
 from spinalcordtoolbox.utils.shell import (SCTArgumentParser, ActionCreateFolder, Metavar, list_type,
                                            printv, display_viewer_syntax)
 from spinalcordtoolbox.utils.sys import set_loglevel, init_sct
-from spinalcordtoolbox import __data_dir__
+from spinalcordtoolbox import __data_dir__, __sct_dir__
 import spinalcordtoolbox.image as msct_image
 import spinalcordtoolbox.labels as sct_labels
 from spinalcordtoolbox.scripts import sct_apply_transfo
@@ -461,14 +461,14 @@ def main(argv=None):
 
         # resample data to 1mm isotropic
         printv('\nResample data to 1mm isotropic...', verbose)
-        resample_file(ftmp_data, add_suffix(ftmp_data, '_1mm'), '1.0x1.0x1.0', 'mm', 'linear', verbose)
-        ftmp_data = add_suffix(ftmp_data, '_1mm')
-        resample_file(ftmp_seg, add_suffix(ftmp_seg, '_1mm'), '1.0x1.0x1.0', 'mm', 'linear', verbose)
-        ftmp_seg = add_suffix(ftmp_seg, '_1mm')
+        resample_file(ftmp_data, f"{__sct_dir__}/ftmp_data_1mm.nii.gz", '1.0x1.0x1.0', 'mm', 'linear', verbose)
+        ftmp_data = f"{__sct_dir__}/ftmp_data_1mm.nii.gz"
+        resample_file(ftmp_seg, f"{__sct_dir__}/ftmp_seg_1mm.nii.gz", '1.0x1.0x1.0', 'mm', 'linear', verbose)
+        ftmp_seg = f"{__sct_dir__}/ftmp_seg_1mm.nii.gz"
         # N.B. resampling of labels is more complicated, because they are single-point labels, therefore resampling
         # with nearest neighbour can make them disappear.
-        resample_labels(ftmp_label, ftmp_data, add_suffix(ftmp_label, '_1mm'))
-        ftmp_label = add_suffix(ftmp_label, '_1mm')
+        resample_labels(ftmp_label, ftmp_data, f"{__sct_dir__}/ftmp_label_1mm.nii.gz")
+        ftmp_label = f"{__sct_dir__}/ftmp_label_1mm.nii.gz"
 
         # Change orientation of input images to RPI
         printv('\nChange orientation of input images to RPI...', verbose)
