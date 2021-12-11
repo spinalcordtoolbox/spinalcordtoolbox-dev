@@ -57,10 +57,10 @@ jobs:
         run: |
           ./batch_processing_mini.sh
 
-      - name: Upload dot product artifact
+      - name: Upload 1mm resample product artifact
         uses: actions/upload-artifact@v2
         with:
-          name: dot-product
+          name: resample_tmp
           path: |
             ftmp_data_1mm.nii.gz
             ftmp_seg_1mm.nii.gz
