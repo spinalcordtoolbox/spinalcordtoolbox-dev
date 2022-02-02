@@ -282,7 +282,7 @@ sct_maths -i fmri.nii.gz -mean t -o fmri_mean.nii.gz
 # Bring t2 segmentation to fmri space (to create a mask)
 sct_register_multimodal -i ../t2/t2_seg.nii.gz -d fmri_mean.nii.gz -identity 1
 # Create mask at the center of the FOV
-sct_create_mask -i fmri.nii.gz -p centerline,t2_seg_reg.nii.gz -size 35mm -f cylinder
+sct_create_mask -i fmri.nii.gz -p centerline,t2_seg_reg.nii.gz -size 40mm -f cylinder
 
 # Motion correction (using mask)
 sct_fmri_moco -i fmri.nii.gz -m mask_fmri.nii.gz -qc ~/qc_singleSubj -qc-seg t2_seg_reg.nii.gz
