@@ -39,6 +39,7 @@ jobs:
           model_name=$(sysctl -n machdep.cpu.brand_string 2>1 /dev/null || echo $(lscpu | sed -nr '/Model name/ s/.*:\s*(.*) @ .*/\1/p'))
           echo $model_name
           echo "::set-output name=cpu_name::$model_name"
+          echo "::error file=.github/workflows/test-batch-processing.yml,line=39,col=1,endColumn=2::Model name == $model_name"
 
       - name: Checkout SCT
         if: ${{ steps.get_cpu_name.outputs.cpu_name == 'Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz' }}
