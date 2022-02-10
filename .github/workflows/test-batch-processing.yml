@@ -58,7 +58,7 @@ jobs:
       - name: Run batch_processing.sh
         if: ${{ steps.get_cpu_name.outputs.cpu_name == 'Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz' }}
         run: |
-          ./batch_processing_mini.sh
+          ./batch_processing.sh
 
       - name: Upload 1mm resample product artifact
         if: ${{ steps.get_cpu_name.outputs.cpu_name == 'Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz' }}
