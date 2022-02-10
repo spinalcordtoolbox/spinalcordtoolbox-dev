@@ -70,3 +70,10 @@ jobs:
             ftmp_data_1mm.nii.gz
             ftmp_seg_1mm.nii.gz
             ftmp_label_1mm.nii.gz
+
+      - name: Validate new results
+        if: ${{ steps.get_cpu_name.outputs.cpu_name == 'Intel(R) Xeon(R) Platinum 8370C CPU' }}
+        run: |
+          source python/etc/profile.d/conda.sh
+          conda activate venv_sct
+          pytest testing/batch_processing/test_batch_processing.py
