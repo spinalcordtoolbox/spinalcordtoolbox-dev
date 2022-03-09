@@ -60,7 +60,7 @@ if [[ "$SCT_BP_DOWNLOAD" == "1" ]]; then
 fi
 echo $SCT_DIR
 pwd
-cd data/sct_example_data
+cd "${SCT_DIR}/data/sct_example_data"
 
 
 # t2
