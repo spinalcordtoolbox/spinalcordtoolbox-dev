@@ -58,7 +58,8 @@ start=`date +%s`
 if [[ "$SCT_BP_DOWNLOAD" == "1" ]]; then
   sct_download_data -d sct_example_data
 fi
-echo SCT_DIR="$SCT_DIR" PWD="$PWD"
+echo $SCT_DIR
+pwd
 cd data/sct_example_data
 
 
