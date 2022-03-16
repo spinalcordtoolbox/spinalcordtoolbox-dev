@@ -15,6 +15,7 @@ import io
 
 import nibabel as nib
 import numpy as np
+import onnxruntime as ort
 
 # Avoid Keras logging
 original_stderr = sys.stderr
@@ -211,7 +212,7 @@ def segment_volume(ninput_volume, model_name,
     """
     gmseg_model_challenge = DataResource('deepseg_gm_models')
     model_path, metadata_path = model.MODELS[model_name]
-
+    model_abs_path = gmseg_model_challenge.get_file_path(model_path)
     metadata_abs_path = gmseg_model_challenge.get_file_path(metadata_path)
     with open(metadata_abs_path) as fp:
         metadata = json.load(fp)
@@ -226,11 +227,7 @@ def segment_volume(ninput_volume, model_name,
         # larger sizer, crop at 200x200
         net_input_size = (SMALL_INPUT_SIZE, SMALL_INPUT_SIZE)
 
-    deepgmseg_model = model.create_model(metadata['filters'],
-                                         net_input_size)
-
-    model_abs_path = gmseg_model_challenge.get_file_path(model_path)
-    deepgmseg_model.load_weights(model_abs_path)
+    ort_sess = ort.InferenceSession(model_abs_path)
 
     volume_data = ninput_volume.get_data()
     axial_slices = []
@@ -257,20 +254,16 @@ def segment_volume(ninput_volume, model_name,
         for i in range(8):
             sampled_value = np.random.uniform(high=2.0)
             sampled_axial_slices = axial_slices + sampled_value
-            preds = deepgmseg_model.predict(sampled_axial_slices,
-                                            batch_size=BATCH_SIZE,
-                                            verbose=True)
+            preds = ort_sess.run(output_names=["predictions"], input_feed={"input_1": sampled_axial_slices})[0]
             pred_sampled.append(preds)
 
-        preds = deepgmseg_model.predict(axial_slices, batch_size=BATCH_SIZE,
-                                        verbose=True)
+        preds = ort_sess.run(output_names=["predictions"], input_feed={"input_1": axial_slices})[0]
         pred_sampled.append(preds)
         pred_sampled = np.asarray(pred_sampled)
         pred_sampled = np.mean(pred_sampled, axis=0)
         preds = threshold_predictions(pred_sampled, threshold)
     else:
-        preds = deepgmseg_model.predict(axial_slices, batch_size=BATCH_SIZE,
-                                        verbose=True)
+        preds = ort_sess.run(output_names=["predictions"], input_feed={"input_1": axial_slices})[0]
         preds = threshold_predictions(preds, threshold)
 
     pred_slices = []

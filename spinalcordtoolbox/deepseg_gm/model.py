@@ -19,8 +19,8 @@ from keras.optimizers import Adam
 # Models
 # Tuple of (model, metadata)
 MODELS = {
-    'challenge': ('challenge_model.hdf5', 'challenge_model.json'),
-    'large': ('large_model.hdf5', 'large_model.json'),
+    'challenge': ('challenge_model.onnx', 'challenge_model.json'),
+    'large': ('large_model.onnx', 'large_model.json'),
 }
 
 
