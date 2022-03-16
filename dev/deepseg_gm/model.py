@@ -16,13 +16,6 @@ from keras.layers import BatchNormalization
 from keras.layers import concatenate, GlobalAveragePooling2D
 from keras.optimizers import Adam
 
-# Models
-# Tuple of (model, metadata)
-MODELS = {
-    'challenge': ('challenge_model.onnx', 'challenge_model.json'),
-    'large': ('large_model.onnx', 'large_model.json'),
-}
-
 
 def dice_coef(y_true, y_pred):
     """Dice coefficient specification

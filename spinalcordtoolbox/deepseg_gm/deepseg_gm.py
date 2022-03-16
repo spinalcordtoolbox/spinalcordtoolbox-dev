@@ -8,47 +8,22 @@
 #     URL: https://arxiv.org/abs/1710.01269
 
 import os
-import sys
-import io
 
 import nibabel as nib
 import numpy as np
 import onnxruntime as ort
 
-# Avoid Keras logging
-original_stderr = sys.stderr
-if sys.hexversion < 0x03000000:
-    sys.stderr = io.BytesIO()
-else:
-    sys.stderr = io.TextIOWrapper(io.BytesIO(), sys.stderr.encoding)
-try:
-    from keras import backend as K
-except Exception as e:
-    sys.stderr = original_stderr
-    raise
-else:
-    sys.stderr = original_stderr
-
 from spinalcordtoolbox import resampling, __data_dir__
-from . import model
 
+# Models
+# Tuple of (model, metadata)
+MODELS = {
+    'challenge': ('challenge_model.onnx', 'challenge_model.json'),
+    'large': ('large_model.onnx', 'large_model.json'),
+}
 
-# Suppress warnings and TensorFlow logging
-warnings.simplefilter(action='ignore', category=FutureWarning)
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 INPUT_SIZE = 200
 BATCH_SIZE = 4
-
-
-def check_backend():
-    """This function will check for the current backend and
-    then it will warn the user if the backend is theano."""
-    if K.backend() != 'tensorflow':
-        print("\nWARNING: you're using a Keras backend different than\n"
-              "Tensorflow, which is not recommended. Please verify\n"
-              "your configuration file according to: https://keras.io/backend/\n"
-              "to make sure you're using Tensorflow Keras backend.\n")
-    return K.backend()
 
 
 class DataResource(object):
@@ -201,7 +176,7 @@ def segment_volume(ninput_volume, model_name,
     :return: segmented slices.
     """
     gmseg_model_challenge = DataResource('deepseg_gm_models')
-    model_path, metadata_path = model.MODELS[model_name]
+    model_path, metadata_path = MODELS[model_name]
     model_abs_path = gmseg_model_challenge.get_file_path(model_path)
 
     ort_sess = ort.InferenceSession(model_abs_path)
