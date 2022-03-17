@@ -168,6 +168,11 @@ jobs:
     # Stream8 has a 2024 EOL, while CentOS 8 has a 2021 EOL
     # See: https://blog.centos.org/2020/12/future-is-centos-stream/
     container: quay.io/centos/centos:stream8
+    strategy:
+      matrix:
+        # "3.10" is currently unsupported by onnxruntime, see:
+        # https://github.com/microsoft/onnxruntime/issues/9782 (ETA Summer 2022)
+        python: [ "3.7", "3.8", "3.9" ]
     steps:
       - name: Dependencies
         run: |  # NB: mesa-libGL is needed for PyQT testing (https://stackoverflow.com/a/65408967/7584115)
@@ -175,6 +180,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install SCT
         run: |
+          export SCT_PYTHON_VERSION=${{ matrix.python }}
           ./.ci.sh -i
       - name: Check dependencies
         run: |
@@ -209,10 +215,16 @@ jobs:
   ubuntu-20_04:
     name: Ubuntu 20.04 (Focal Fossa)
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        # "3.10" is currently unsupported by onnxruntime, see:
+        # https://github.com/microsoft/onnxruntime/issues/9782 (ETA Summer 2022)
+        python: [ "3.7", "3.8", "3.9" ]
     steps:
       - uses: actions/checkout@v2
       - name: Install SCT
         run: |
+          export SCT_PYTHON_VERSION=${{ matrix.python }}
           ./.ci.sh -i
       - name: Check dependencies
         run: |
@@ -259,10 +271,16 @@ jobs:
   macos-10_15:
    name: macOS 10.15 (Catalina)
    runs-on: macos-10.15
+   strategy:
+     matrix:
+       # "3.10" is currently unsupported by onnxruntime, see:
+       # https://github.com/microsoft/onnxruntime/issues/9782 (ETA Summer 2022)
+       python: [ "3.7", "3.8", "3.9" ]
    steps:
      - uses: actions/checkout@v2
      - name: Install SCT
        run: |
+         export SCT_PYTHON_VERSION=${{ matrix.python }}
          ./.ci.sh -i
      - name: Check dependencies
        run: |
@@ -393,10 +411,18 @@ jobs:
   windows-native:
     name: Windows (Native)
     runs-on: windows-2019
+    strategy:
+      matrix:
+        # "3.10" is currently unsupported by onnxruntime, see:
+        # https://github.com/microsoft/onnxruntime/issues/9782 (ETA Summer 2022)
+        python: [ "3.7", "3.8", "3.9" ]
     defaults:
       run:
         shell: cmd
     steps:
+    - uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python }}
     - name: Get branch name (merge)
       if: github.event_name != 'pull_request'
       shell: bash
