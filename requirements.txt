@@ -25,10 +25,10 @@ scikit-learn
 # The macOS version has never had GPU support, so doesn't need the workaround.
 -f https://download.pytorch.org/whl/torch/
 -f https://download.pytorch.org/whl/torchvision/
-torch==1.5.0+cpu; sys_platform != "darwin"
-torch==1.5.0; sys_platform == "darwin"
-torchvision==0.6.0+cpu; sys_platform != "darwin"
-torchvision==0.6.0; sys_platform == "darwin"
+torch==1.7.1+cpu; sys_platform != "darwin"
+torch==1.7.1; sys_platform == "darwin"
+torchvision==0.8.2+cpu; sys_platform != "darwin"
+torchvision==0.8.2; sys_platform == "darwin"
 xlwt
 tqdm
 transforms3d
