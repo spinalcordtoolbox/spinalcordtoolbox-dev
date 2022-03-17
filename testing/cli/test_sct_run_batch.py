@@ -67,6 +67,7 @@ def test_config_extra_value_warning():
                 sct_run_batch.main(['-c', config.name, '-script', 'script'])
 
 
+@pytest.mark.skip("To be rewritten by https://github.com/spinalcordtoolbox/spinalcordtoolbox/pull/3719.")
 def test_only_one_include():
     # This is formatted strangely because pep8 says so.
     with \
