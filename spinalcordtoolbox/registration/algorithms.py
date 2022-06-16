@@ -29,9 +29,10 @@ import voxelmorph as vxm
 import spinalcordtoolbox.image as image
 from spinalcordtoolbox.math import laplacian
 from spinalcordtoolbox.registration.landmarks import register_landmarks
+from spinalcordtoolbox.registration import core
 from spinalcordtoolbox.utils import sct_progress_bar, copy_helper, run_proc, tmp_create, sct_dir_local_path
 
-from spinalcordtoolbox.scripts import sct_resample, sct_register_multimodal
+from spinalcordtoolbox.scripts import sct_resample
 
 # TODO [AJ]
 # introduce potential cleanup functions in case exceptions occur and
@@ -1427,15 +1428,11 @@ def register_step_dl_multimodal_cascaded_reg(src, dest, step, verbose=1):
     sct_resample.main(['-i', dest, '-o', dest_iso_res, '-mm', '1x1x1'])
     # Bring source image into same space as moving image
     src_same_space = image.add_suffix(src, '_same_space')
-    # TODO: Stop using `sct_register_multimodal` to pre-register images.
-    #       Right now, this function uses `sct_register_multimodal` for pre-registering images. But,
-    #       `sct_register_multimodal` also imports objects from `register.py`, which risks a circular import error.
-    #       (See also: https://github.com/spinalcordtoolbox/spinalcordtoolbox/pull/3807#discussion_r899164740)
-    #       Ideally, there would be a way to perform this `-identity` pre-registration without having to touch SCT's
-    #       CLI scripts. So, we should consider doing something like:
-    #           - Move `register_wrapper()` from sct_register_to_template to `register.py`
-    #           - Then, use `register_wrapper()` to pre-register instead of `sct_register_multimodal.main()`
-    sct_register_multimodal.main(['-i', src, '-d', dest_iso_res, '-o', src_same_space, '-identity', '1'])
+    # NB: `register_wrapper()` requires a 'Param' object that is defined on the fly in `sct_register_` CLI scripts
+    #     It would be nice to one day rewrite `register_wrapper` to replace Param() with actual individual arguments
+    param = type('Param', (object,), {'padding': 5, 'fname_mask': None, 'verbose': 0, 'remove_temp_files': 1 })()
+    core.register_wrapper(src, dest_iso_res, param=param, paramregmulti=ParamregMultiStep(),
+                          identity=1, fname_output=src_same_space)
 
     dest = dest_iso_res
     src = src_same_space
